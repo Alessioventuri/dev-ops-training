@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Python CI/CD Pipeline
 
 on:
   push:
@@ -13,14 +13,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build and Test
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
       run: |
-        echo "Building and testing the application"
-        npm install   # Install dependencies
-        npm run build # Build the application
-        npm test      # Run tests
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build
+      run: |
+        echo "Building the application"
+        python3 app.py
+
 
     - name: Deploy
+      if: success()   # Deploy only if tests pass
       run: |
         echo "Deploying the application"
-        cp -R dist/ /var/www/html/   # Copy the built files to a web server directory
+        # Add deployment commands here (e.g., SSH to remote server and copy files)

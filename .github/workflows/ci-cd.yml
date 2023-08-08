@@ -29,6 +29,7 @@ jobs:
         python3 app.py
 
 
+
     - name: Deploy
       if: success()   # Deploy only if tests pass
       run: |

@@ -16,6 +16,7 @@ jobs:
     - name: Build and Test
       run: |
         echo "Building and testing the application"
+        cd /home/runner/work/dev-ops-training
         npm install   # Install dependencies
         npm run build # Build the application
         npm test      # Run tests

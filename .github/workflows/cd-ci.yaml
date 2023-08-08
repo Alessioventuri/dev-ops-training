@@ -1,0 +1,26 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and Test
+      run: |
+        echo "Building and testing the application"
+        npm install   # Install dependencies
+        npm run build # Build the application
+        npm test      # Run tests
+
+    - name: Deploy
+      run: |
+        echo "Deploying the application"
+        cp -R dist/ /var/www/html/   # Copy the built files to a web server directory

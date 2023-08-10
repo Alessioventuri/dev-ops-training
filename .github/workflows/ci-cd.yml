@@ -1,4 +1,4 @@
-name: Python CI/CD Pipeline
+name: Continuous Integration and Deployment
 
 on:
   push:
@@ -6,40 +6,43 @@ on:
       - master
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
-
+      
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
-
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
-    - name: Build Docker image
-      run: docker build -t my-flask-app .
-
-    - name: Install Azure CLI
-      run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-        az --version
-
-    - name: Log in to Azure
-      run: |
-        echo '${{ secrets.AZURE_CREDENTIALS }}' > credentials.json
-        az login --service-principal --credential @credentials.json
-      env:
-        AZURE_CLIENT_ID: ${{ secrets.AZURE_CREDENTIALS_CLIENT_ID }}
-        AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CREDENTIALS_CLIENT_SECRET }}
-        AZURE_TENANT_ID: ${{ secrets.AZURE_CREDENTIALS_TENANT_ID }}
         
-    - name: Deploy to Azure App Service
+    - name: Run tests
       run: |
-        az webapp up --name my-flask-app --resource-group my-resource-group
+        python -m pytest
+        
+    - name: Build Docker image
+      run: |
+        docker build -t my-flask-app .
+        
+    - name: Log in to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: devopstrainingcontainer01.azurecr.io
+        username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+        
+    - name: Tag Docker image
+      run: |
+        docker tag my-flask-app devopstrainingcontainer01.azurecr.io/my-flask-app:latest
+        
+    - name: Push Docker image to Azure Container Registry
+      run: |
+        docker push devopstrainingcontainer01.azurecr.io/my-flask-app:latest
+

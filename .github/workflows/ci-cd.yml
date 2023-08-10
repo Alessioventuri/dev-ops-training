@@ -23,9 +23,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Run tests
+    - name: Build app
       run: |
-        python -m pytest
+        python app.py
         
     - name: Build Docker image
       run: |

@@ -9,7 +9,7 @@ pipeline {
                 python3 -m pip install -r requirements.txt
                 """
             }
-        },
+        }
         stage('Stage 2') {
             steps {
                 sh """

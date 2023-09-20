@@ -21,7 +21,6 @@ pipeline {
                 // Activate the robot_env virtual environment and run Robot Framework
                 script {
                     sh """
-                    source /usr/local/robot_env/bin/activate
                     python3 -m robot --loglevel DEBUG --pythonpath libraries --variable YOUR_VARIABLE_NAME --exclude excluded -d ./result tests
                     """
                 }

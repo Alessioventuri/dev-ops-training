@@ -1,2 +1,6 @@
 Flask==2.0.1
 jsonify
+robotframework
+robotframework-seleniumLibrary
+webdrivermanager
+webdriver_manager
